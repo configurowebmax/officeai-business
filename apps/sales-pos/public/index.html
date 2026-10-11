@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConfiguroWeb POS &amp; Facturación • Univer Workspace Suite</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-hover: #1f2937;
+      --border: #1f2937;
+      --border-focus: #3b82f6;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --purple: #8b5cf6;
+      --danger: #ef4444;
+      --wa-green: #25d366;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand h1 {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .btn-secondary {
+      background: #1f2937;
+      color: #e5e7eb;
+      border-color: #374151;
+    }
+    .btn-secondary:hover {
+      background: #374151;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-accent:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-wa {
+      background: #25d366;
+      color: #fff;
+    }
+    .btn-wa:hover {
+      background: #128c7e;
+    }
+
+    /* Notification Alert */
+    .alert-banner {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #a7f3d0;
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .alert-banner.error {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grid Layout */
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 960px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-size: 17px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Products Catalog */
+    .search-bar {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+    .search-bar:focus {
+      border-color: var(--primary);
+    }
+
+    .category-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+    .category-pills::-webkit-scrollbar {
+      height: 4px;
+    }
+    .category-pills::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 4px;
+    }
+
+    .cat-btn {
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .cat-btn:hover {
+      border-color: #4b5563;
+      color: #fff;
+    }
+    .cat-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 12px;
+      max-height: 540px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+    .products-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+    .products-grid::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 4px;
+    }
+
+    .product-card {
+      background: #172033;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+    .product-card.selected {
+      border-color: var(--accent);
+      background: rgba(16, 185, 129, 0.08);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .product-emoji {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+    .product-badge {
+      font-size: 10px;
+      background: rgba(156, 163, 175, 0.15);
+      color: #9ca3af;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .product-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .product-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+    .product-stock {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Checkout & Document Panel */
+    .type-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      background: #090d16;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+    }
+
+    .type-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-muted);
+      background: transparent;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .type-btn.active.factura {
+      background: var(--primary);
+      color: #fff;
+    }
+    .type-btn.active.cotizacion {
+      background: var(--purple);
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--primary);
+    }
+
+    .qty-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .qty-btn {
+      width: 38px;
+      height: 38px;
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-btn:hover {
+      background: #374151;
+    }
+
+    .totals-box {
+      background: #090d16;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 18px 0;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .total-row.final {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #374151;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+    .submit-btn:hover:not(:disabled) {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .submit-btn.cotizacion {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      display: none;
+    }
+    .modal {
+      background: var(--card-bg);
+      border: 1px solid #374151;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .modal-close:hover {
+      color: #fff;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid #1f2937;
+    }
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      background: #090d16;
+    }
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .badge-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .badge-fac {
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+    }
+    .badge-cot {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c084fc;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-icon {
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #e5e7eb;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-icon:hover {
+      background: #374151;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1>⚡ ConfiguroWeb POS &amp; Facturación Corporativa</h1>
+        <p>Sincronización en vivo con Univer Workspace • Emisión de Facturas y Cotizaciones en PDF • Envíos SMTP y WhatsApp</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="openProductModal()">
+          ➕ Nuevo Producto
+        </button>
+        <button class="btn btn-secondary" onclick="openClientModal()">
+          👤 Nuevo Cliente
+        </button>
+        <button class="btn btn-secondary" onclick="openSmtpModal()">
+          ⚙️ Configurar SMTP
+        </button>
+        <a href="http://127.0.0.1:5173" target="_blank" class="btn btn-secondary">
+          🗄️ Univer Workspace ↗
+        </a>
+      </div>
+    </header>
+
+    <!-- Success & Actions Alert Banner -->
+    <div id="alertBanner" class="alert-banner"></div>
+
+    <div class="grid-layout">
+      <!-- Left Panel: Product Catalog -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📦 Catálogo de Productos (<span id="productsCount">...</span>)</span>
+          </div>
+          <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 10px;" onclick="openProductModal()">
+            + Agregar
+          </button>
+        </div>
+
+        <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Buscar por nombre, categoría o código...">
+        
+        <div id="categoryPills" class="category-pills"></div>
+
+        <div id="productsGrid" class="products-grid">
+          <p style="color: var(--text-muted); padding: 20px; text-align: center;">Cargando catálogo...</p>
+        </div>
+      </div>
+
+      <!-- Right Panel: Document & Checkout -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🧾 Emitir Documento</span>
+          </div>
+        </div>
+
+        <!-- Document Type Selector -->
+        <div class="type-selector">
+          <button type="button" class="type-btn active factura" id="btnTypeFactura" onclick="setDocType('FACTURA')">
+            🧾 Factura de Venta
+          </button>
+          <button type="button" class="type-btn" id="btnTypeCotizacion" onclick="setDocType('COTIZACION')">
+            📋 Cotización Comercial
+          </button>
+        </div>
+
+        <form id="docForm">
+          <!-- Client Selector -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+              <label class="form-label" style="margin-bottom: 0;">Cliente</label>
+              <button type="button" onclick="openClientModal()" style="background: none; border: none; color: #60a5fa; font-size: 11px; cursor: pointer;">
+                + Registrar nuevo
+              </button>
+            </div>
+            <select id="clientSelect" class="form-select" onchange="onClientChange()">
+              <option value="1">👤 Consumidor Final (No registrado)</option>
+            </select>
+          </div>
+
+          <!-- Dynamic Client Details -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+            <div>
+              <label class="form-label">WhatsApp / Teléfono</label>
+              <input type="text" id="clientPhone" class="form-input" placeholder="Ej. 573001234567">
+            </div>
+            <div>
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" id="clientEmail" class="form-input" placeholder="cliente@correo.com">
+            </div>
+          </div>
+
+          <!-- Selected Product -->
+          <div class="form-group">
+            <label class="form-label">Producto Seleccionado</label>
+            <input type="text" id="selectedProductName" class="form-input" readonly placeholder="Selecciona un producto del catálogo a la izquierda">
+            <input type="hidden" id="selectedProductId">
+          </div>
+
+          <!-- Quantity -->
+          <div class="form-group">
+            <label class="form-label">Cantidad</label>
+            <div class="qty-selector">
+              <button type="button" class="qty-btn" id="btnMinus">-</button>
+              <input type="number" id="quantity" class="form-input" style="text-align: center; font-weight: 700; width: 80px;" min="1" value="1" readonly>
+              <button type="button" class="qty-btn" id="btnPlus">+</button>
+              <span id="stockNotice" style="font-size: 12px; color: var(--text-muted); margin-left: 8px;"></span>
+            </div>
+          </div>
+
+          <!-- Totals Breakdown -->
+          <div class="totals-box">
+            <div class="total-row">
+              <span>Subtotal:</span>
+              <span id="subtotalDisplay">$0.00</span>
+            </div>
+            <div class="total-row">
+              <span>IVA (19% incluido):</span>
+              <span id="ivaDisplay">$0.00</span>
+            </div>
+            <div class="total-row final">
+              <span id="totalLabel">TOTAL:</span>
+              <span id="totalDisplay">$0.00</span>
+            </div>
+          </div>
+
+          <!-- Auto Email Option -->
+          <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="checkSendEmail" style="cursor: pointer; width: 16px; height: 16px;">
+            <label for="checkSendEmail" style="font-size: 13px; color: var(--text-muted); cursor: pointer;">
+              Enviar PDF automáticamente por correo si tiene email
+            </label>
+          </div>
+
+          <button type="submit" id="btnSubmit" class="submit-btn" disabled>
+            <span>⚡ GENERAR Y PROCESAR DOCUMENTO</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- History Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📋 Base de Datos de Facturas &amp; Cotizaciones (<span id="totalDocsCount">...</span>)</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <a href="http://127.0.0.1:5173" target="_blank" class="btn btn-secondary" style="font-size: 11px;">
+            🗄️ Abrir Univer Base (Trunk) ↗
+          </a>
+          <button onclick="loadDocuments()" class="btn btn-secondary" style="font-size: 11px;">
+            Actualizar ↻
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter pills & search for documents -->
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 6px;" id="docTabs">
+          <button type="button" class="cat-btn active" id="tabDocAll" onclick="filterDocs('TODOS')">
+            Todos (<span id="countAllDocs">0</span>)
+          </button>
+          <button type="button" class="cat-btn" id="tabDocFac" onclick="filterDocs('FACTURA')">
+            🧾 Facturas (<span id="countFacturas">0</span>)
+          </button>
+          <button type="button" class="cat-btn" id="tabDocCot" onclick="filterDocs('COTIZACION')">
+            📋 Cotizaciones (<span id="countCotizaciones">0</span>)
+          </button>
+        </div>
+        <input type="text" id="docSearchInput" class="form-input" placeholder="🔍 Buscar por folio, cliente o producto..." style="max-width: 320px; padding: 8px 12px; font-size: 13px;">
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Folio</th>
+              <th>Tipo</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Contacto</th>
+              <th>Producto</th>
+              <th>Cant.</th>
+              <th>Total</th>
+              <th>Univer Base</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="documentsTableBody">
+            <tr><td colspan="10" style="text-align: center; color: var(--text-muted);">Cargando registros...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Nuevo Producto -->
+  <div id="productModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-title">
+        <span>➕ Agregar Nuevo Producto</span>
+        <button class="modal-close" onclick="closeProductModal()">✕</button>
+      </div>
+      <form id="newProductForm">
+        <div class="form-group">
+          <label class="form-label">Nombre del Producto</label>
+          <input type="text" id="newProdName" class="form-input" required placeholder="Ej. Impresora Térmica POS">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categoría (Selecciona o escribe una nueva)</label>
+          <input type="text" id="newProdCategory" list="categoriesList" class="form-input" required placeholder="Ej. Impresión, Accesorios...">
+          <datalist id="categoriesList"></datalist>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 80px; gap: 10px; margin-bottom: 16px;">
+          <div>
+            <label class="form-label">Precio ($ USD)</label>
+            <input type="number" step="0.01" id="newProdPrice" class="form-input" required placeholder="120.00">
+          </div>
+          <div>
+            <label class="form-label">Stock</label>
+            <input type="number" id="newProdStock" class="form-input" required placeholder="15">
+          </div>
+          <div>
+            <label class="form-label">Emoji</label>
+            <input type="text" id="newProdEmoji" class="form-input" value="📦" style="text-align: center;">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+          Guardar Producto en Base de Datos &amp; Univer Base
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Nuevo Cliente -->
+  <div id="clientModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-title">
+        <span>👤 Registrar Nuevo Cliente</span>
+        <button class="modal-close" onclick="closeClientModal()">✕</button>
+      </div>
+      <form id="newClientForm">
+        <div class="form-group">
+          <label class="form-label">Nombre o Razón Social</label>
+          <input type="text" id="newClientName" class="form-input" required placeholder="Ej. Inversiones Andinas SAS">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <div>
+            <label class="form-label">Cédula o NIT</label>
+            <input type="text" id="newClientDoc" class="form-input" placeholder="900123456-7">
+          </div>
+          <div>
+            <label class="form-label">Teléfono / WhatsApp</label>
+            <input type="text" id="newClientPhone" class="form-input" placeholder="573001234567">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo Electrónico</label>
+          <input type="email" id="newClientEmail" class="form-input" placeholder="compras@cliente.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dirección (Opcional)</label>
+          <input type="text" id="newClientAddress" class="form-input" placeholder="Carrera 15 #85-10">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+          Guardar Cliente
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Configuración SMTP -->
+  <div id="smtpModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-title">
+        <span>⚙️ Configuración de Correo SMTP</span>
+        <button class="modal-close" onclick="closeSmtpModal()">✕</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+        Configura los datos del servidor para enviar facturas y cotizaciones en PDF automáticamente por correo.
+      </p>
+      <form id="smtpForm">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 12px;">
+          <div>
+            <label class="form-label">Host SMTP</label>
+            <input type="text" id="smtpHost" class="form-input" placeholder="smtp.gmail.com" required>
+          </div>
+          <div>
+            <label class="form-label">Puerto</label>
+            <input type="number" id="smtpPort" class="form-input" placeholder="587" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Usuario / Correo</label>
+          <input type="text" id="smtpUser" class="form-input" placeholder="facturacion@miempresa.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña / Contraseña de Aplicación</label>
+          <input type="password" id="smtpPass" class="form-input" placeholder="••••••••••••">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+          <div>
+            <label class="form-label">Nombre Remitente</label>
+            <input type="text" id="smtpFromName" class="form-input" placeholder="ConfiguroWeb Facturación">
+          </div>
+          <div>
+            <label class="form-label">Seguridad SSL/TLS</label>
+            <select id="smtpSecure" class="form-select">
+              <option value="false">STARTTLS (Puerto 587)</option>
+              <option value="true">SSL/TLS (Puerto 465)</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn btn-secondary" onclick="testSmtpConnection()" style="flex: 1; padding: 11px;">
+            🔌 Probar Conexión
+          </button>
+          <button type="submit" class="btn btn-primary" style="flex: 1; padding: 11px;">
+            💾 Guardar SMTP
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let products = [];
+    let clients = [];
+    let documents = [];
+    let selectedProduct = null;
+    let qty = 1;
+    let currentDocType = "FACTURA";
+    let selectedCategory = "Todas";
+    let searchQuery = "";
+
+    // DOM Elements
+    const productsGrid = document.getElementById("productsGrid");
+    const categoryPills = document.getElementById("categoryPills");
+    const searchInput = document.getElementById("searchInput");
+    const productsCount = document.getElementById("productsCount");
+    const clientSelect = document.getElementById("clientSelect");
+    const clientPhone = document.getElementById("clientPhone");
+    const clientEmail = document.getElementById("clientEmail");
+    const selectedProductName = document.getElementById("selectedProductName");
+    const selectedProductId = document.getElementById("selectedProductId");
+    const quantityInput = document.getElementById("quantity");
+    const subtotalDisplay = document.getElementById("subtotalDisplay");
+    const ivaDisplay = document.getElementById("ivaDisplay");
+    const totalDisplay = document.getElementById("totalDisplay");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const alertBanner = document.getElementById("alertBanner");
+    const documentsTableBody = document.getElementById("documentsTableBody");
+    const stockNotice = document.getElementById("stockNotice");
+
+    // Initialization
+    async function init() {
+      await Promise.all([loadProducts(), loadClients(), loadDocuments(), loadSmtpConfig()]);
+    }
+
+    // 1. PRODUCTS LOGIC
+    async function loadProducts() {
+      try {
+        const res = await fetch("/api/products");
+        products = await res.json();
+        productsCount.textContent = products.length;
+        renderCategoryPills();
+        renderProducts();
+        updateCategoryDatalist();
+      } catch (e) {
+        console.error("Error al cargar productos:", e);
+      }
+    }
+
+    function renderCategoryPills() {
+      const categories = ["Todas", ...new Set(products.map(p => p.category))];
+      categoryPills.innerHTML = categories.map(cat => `
+        <button type="button" class="cat-btn ${selectedCategory === cat ? 'active' : ''}" onclick="filterCategory('${cat}')">
+          ${cat}
+        </button>
+      `).join("");
+    }
+
+    window.filterCategory = function(cat) {
+      selectedCategory = cat;
+      renderCategoryPills();
+      renderProducts();
+    };
+
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      renderProducts();
+    });
+
+    function renderProducts() {
+      const filtered = products.filter(p => {
+        const matchCat = selectedCategory === "Todas" || p.category === selectedCategory;
+        const matchQuery = !searchQuery || 
+          p.name.toLowerCase().includes(searchQuery) || 
+          p.category.toLowerCase().includes(searchQuery) ||
+          ("prod-" + String(p.id).padStart(3, "0")).includes(searchQuery);
+        return matchCat && matchQuery;
+      });
+
+      if (filtered.length === 0) {
+        productsGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 24px;">No se encontraron productos coincidentes.</p>`;
+        return;
+      }
+
+      productsGrid.innerHTML = filtered.map(p => `
+        <div class="product-card ${selectedProduct?.id === p.id ? 'selected' : ''}" onclick="selectProduct(${p.id})">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span class="product-emoji">${p.emoji || '📦'}</span>
+              <span class="product-badge">${p.category}</span>
+            </div>
+            <div class="product-name">${p.name}</div>
+          </div>
+          <div>
+            <div class="product-price">$${p.price.toFixed(2)}</div>
+            <div class="product-stock">Stock: ${p.stock} unid.</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    window.selectProduct = function(id) {
+      selectedProduct = products.find(p => p.id === id);
+      selectedProductName.value = `${selectedProduct.emoji || '📦'} ${selectedProduct.name} ($${selectedProduct.price.toFixed(2)})`;
+      selectedProductId.value = selectedProduct.id;
+      qty = 1;
+      quantityInput.value = qty;
+      stockNotice.textContent = `(Disponible: ${selectedProduct.stock})`;
+      updateTotals();
+      renderProducts();
+    };
+
+    document.getElementById("btnPlus").addEventListener("click", () => {
+      if (!selectedProduct) return;
+      if (currentDocType === "COTIZACION" || qty < selectedProduct.stock) {
+        qty++;
+        quantityInput.value = qty;
+        updateTotals();
+      }
+    });
+
+    document.getElementById("btnMinus").addEventListener("click", () => {
+      if (!selectedProduct) return;
+      if (qty > 1) {
+        qty--;
+        quantityInput.value = qty;
+        updateTotals();
+      }
+    });
+
+    function updateTotals() {
+      if (!selectedProduct) {
+        subtotalDisplay.textContent = "$0.00";
+        ivaDisplay.textContent = "$0.00";
+        totalDisplay.textContent = "$0.00";
+        btnSubmit.disabled = true;
+        return;
+      }
+
+      const total = selectedProduct.price * qty;
+      const subtotal = total / 1.19;
+      const iva = total - subtotal;
+
+      subtotalDisplay.textContent = `$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      ivaDisplay.textContent = `$${iva.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      totalDisplay.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      btnSubmit.disabled = false;
+    }
+
+    // 2. CLIENTS LOGIC
+    async function loadClients() {
+      try {
+        const res = await fetch("/api/clients");
+        clients = await res.json();
+        clientSelect.innerHTML = clients.map(c => `
+          <option value="${c.id}">${c.name} ${c.doc_id ? `(${c.doc_id})` : ''}</option>
+        `).join("");
+        onClientChange();
+      } catch (e) {
+        console.error("Error al cargar clientes:", e);
+      }
+    }
+
+    window.onClientChange = function() {
+      const selectedId = Number(clientSelect.value);
+      const client = clients.find(c => c.id === selectedId);
+      if (client) {
+        clientPhone.value = client.phone || "";
+        clientEmail.value = client.email || "";
+      }
+    };
+
+    // 3. DOCUMENT TYPE SWITCHER
+    window.setDocType = function(type) {
+      currentDocType = type;
+      const btnFac = document.getElementById("btnTypeFactura");
+      const btnCot = document.getElementById("btnTypeCotizacion");
+
+      if (type === "FACTURA") {
+        btnFac.className = "type-btn active factura";
+        btnCot.className = "type-btn";
+        btnSubmit.className = "submit-btn";
+        btnSubmit.innerHTML = `<span>⚡ GENERAR FACTURA &amp; SINCRONIZAR</span>`;
+      } else {
+        btnCot.className = "type-btn active cotizacion";
+        btnFac.className = "type-btn";
+        btnSubmit.className = "submit-btn cotizacion";
+        btnSubmit.innerHTML = `<span>📋 GENERAR COTIZACIÓN COMERCIAL</span>`;
+      }
+      updateTotals();
+    };
+
+    // 4. SUBMIT DOCUMENT FORM
+    document.getElementById("docForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!selectedProduct) return;
+
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = `<span>Generando PDF y Sincronizando... ⏳</span>`;
+
+      try {
+        const selectedClientId = Number(clientSelect.value);
+        const clientObj = clients.find(c => c.id === selectedClientId) || {};
+
+        const payload = {
+          tipo: currentDocType,
+          clientId: selectedClientId,
+          clientName: clientObj.name || "Consumidor Final (No registrado)",
+          clientDoc: clientObj.doc_id || "",
+          clientPhone: clientPhone.value.trim(),
+          clientEmail: clientEmail.value.trim(),
+          productId: selectedProduct.id,
+          quantity: qty,
+          sendEmail: document.getElementById("checkSendEmail").checked
+        };
+
+        const res = await fetch("/api/documents", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          const doc = data.document;
+          showSuccessBanner(doc, data.pdfUrl, data.whatsappUrl, data.emailResult);
+
+          // Reset selection
+          selectedProduct = null;
+          selectedProductName.value = "";
+          selectedProductId.value = "";
+          qty = 1;
+          quantityInput.value = 1;
+          stockNotice.textContent = "";
+          updateTotals();
+
+          await loadProducts();
+          await loadDocuments();
+        } else {
+          alert("Error: " + (data.error || "No se pudo procesar el documento"));
+        }
+      } catch (err) {
+        alert("Error de conexión: " + err.message);
+      } finally {
+        setDocType(currentDocType);
+      }
+    });
+
+    function showSuccessBanner(doc, pdfUrl, whatsappUrl, emailResult) {
+      alertBanner.style.display = "block";
+      alertBanner.className = "alert-banner";
+      
+      const emailStatusText = emailResult?.sent 
+        ? `✅ Enviado por correo a <strong>${doc.cliente_email}</strong>`
+        : (doc.cliente_email ? `ℹ️ Correo no enviado (${emailResult?.error || 'Sin envío automático'})` : `ℹ️ Sin correo registrado`);
+
+      alertBanner.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: gap; gap: 12px;">
+          <div>
+            <div style="font-size: 16px; font-weight: 700;">
+              🎉 ¡${doc.tipo === 'COTIZACION' ? 'Cotización' : 'Factura'} #${doc.folio} generada exitosamente!
+            </div>
+            <div style="font-size: 13px; margin-top: 4px; color: #d1fae5;">
+              Cliente: <strong>${doc.cliente_nombre}</strong> • Total: <strong>$${doc.total.toFixed(2)} USD</strong> • ${emailStatusText}
+            </div>
+            <div style="font-size: 12px; margin-top: 2px; color: #a7f3d0;">
+              ✓ Documento PDF generado • Sincronizado en Univer Workspace (Base y Sheets)
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="${pdfUrl}" target="_blank" class="btn btn-primary" style="font-size: 12px;">
+              📥 Descargar PDF
+            </a>
+            <button type="button" onclick="openWhatsApp('${doc.folio}', '${doc.cliente_telefono || ''}', '${doc.cliente_nombre}', ${doc.total}, '${doc.tipo}', '${doc.pdf_url || `/invoices/${doc.folio}.pdf`}')" class="btn btn-wa" style="font-size: 12px;">
+              🟢 Enviar WhatsApp
+            </button>
+          </div>
+        </div>
+      `;
+
+      alertBanner.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.openWhatsApp = function(folio, phone, clientName, total, tipo, pdfLink) {
+      let targetPhone = (phone || "").replace(/\D/g, "");
+      if (!targetPhone) {
+        targetPhone = prompt("Ingresa el número de WhatsApp para enviar el documento #" + folio + " (con código de país, ej. 573001234567):", "");
+        if (!targetPhone) return;
+        targetPhone = targetPhone.replace(/\D/g, "");
+      }
+      // Auto-prefijo para Colombia si son 10 dígitos iniciando en 3
+      if (targetPhone.length === 10 && targetPhone.startsWith("3")) {
+        targetPhone = "57" + targetPhone;
+      }
+      const isCot = tipo === "COTIZACION";
+      const waMsg = `👋 Hola *${clientName}*, te compartimos tu ${isCot ? 'Cotización' : 'Factura'} *#${folio}* por valor de *$${Number(total).toFixed(2)} USD*.\n\n📄 Descarga tu PDF oficial aquí: ${window.location.origin}${pdfLink}\n\n¡Gracias por preferir a *ConfiguroWeb & Univer Suite*!`;
+
+      // Abre directamente WhatsApp Web en el navegador
+      const url = `https://web.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(waMsg)}`;
+      window.open(url, "_blank");
+    };
+
+    // 5. DOCUMENTS HISTORY
+    let currentDocFilter = "TODOS";
+    let docSearchQuery = "";
+
+    async function loadDocuments() {
+      try {
+        const res = await fetch("/api/documents");
+        documents = await res.json();
+        updateDocCounts();
+        renderDocuments();
+      } catch (e) {
+        console.error("Error al cargar documentos:", e);
+      }
+    }
+
+    function updateDocCounts() {
+      const total = documents.length;
+      const facturas = documents.filter(d => d.tipo === "FACTURA").length;
+      const cotizaciones = documents.filter(d => d.tipo === "COTIZACION").length;
+
+      document.getElementById("totalDocsCount").textContent = total;
+      document.getElementById("countAllDocs").textContent = total;
+      document.getElementById("countFacturas").textContent = facturas;
+      document.getElementById("countCotizaciones").textContent = cotizaciones;
+    }
+
+    window.filterDocs = function(type) {
+      currentDocFilter = type;
+      document.getElementById("tabDocAll").className = type === "TODOS" ? "cat-btn active" : "cat-btn";
+      document.getElementById("tabDocFac").className = type === "FACTURA" ? "cat-btn active" : "cat-btn";
+      document.getElementById("tabDocCot").className = type === "COTIZACION" ? "cat-btn active" : "cat-btn";
+      renderDocuments();
+    };
+
+    document.getElementById("docSearchInput").addEventListener("input", (e) => {
+      docSearchQuery = e.target.value.toLowerCase().trim();
+      renderDocuments();
+    });
+
+    function renderDocuments() {
+      const filtered = documents.filter(d => {
+        const matchType = currentDocFilter === "TODOS" || d.tipo === currentDocFilter;
+        const matchQuery = !docSearchQuery ||
+          d.folio.toLowerCase().includes(docSearchQuery) ||
+          d.cliente_nombre.toLowerCase().includes(docSearchQuery) ||
+          d.producto_nombre.toLowerCase().includes(docSearchQuery) ||
+          (d.cliente_telefono && d.cliente_telefono.includes(docSearchQuery)) ||
+          (d.cliente_email && d.cliente_email.toLowerCase().includes(docSearchQuery));
+        return matchType && matchQuery;
+      });
+
+      if (filtered.length === 0) {
+        documentsTableBody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 20px;">No se encontraron documentos coincidentes.</td></tr>`;
+        return;
+      }
+
+      documentsTableBody.innerHTML = filtered.map(d => {
+        const isCot = d.tipo === "COTIZACION";
+        const pdfLink = `/invoices/${d.folio}.pdf`;
+        const contactInfo = [d.cliente_telefono, d.cliente_email].filter(Boolean).join(" • ") || "Sin contacto";
+
+        return `
+          <tr>
+            <td><strong>#${d.folio}</strong></td>
+            <td><span class="badge-tag ${isCot ? 'badge-cot' : 'badge-fac'}">${d.tipo}</span></td>
+            <td>${d.fecha.slice(0, 10)}</td>
+            <td><strong>${d.cliente_nombre}</strong></td>
+            <td style="font-size: 11px; color: var(--text-muted);">${contactInfo}</td>
+            <td>${d.producto_nombre}</td>
+            <td style="text-align: center;">${d.cantidad}</td>
+            <td><strong style="color: #38bdf8;">$${d.total.toFixed(2)}</strong></td>
+            <td><span style="color: #10b981; font-weight: 600; font-size: 11px;">✓ Sincronizado</span></td>
+            <td>
+              <div class="action-icons">
+                <a href="${pdfLink}" target="_blank" class="btn-icon" title="Ver / Descargar PDF">
+                  📄 PDF
+                </a>
+                <button type="button" class="btn-icon" style="color: #4ade80;" onclick="openWhatsApp('${d.folio}', '${d.cliente_telefono || ''}', '${d.cliente_nombre}', ${d.total}, '${d.tipo}', '${pdfLink}')" title="Compartir en WhatsApp">
+                  📲 WhatsApp
+                </button>
+                <button type="button" class="btn-icon" onclick="promptSendEmail('${d.folio}', '${d.cliente_email || ''}')" title="Enviar por Email">
+                  ✉️ Email
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    window.promptSendEmail = async function(folio, defaultEmail) {
+      const email = prompt(`Ingresa el correo al que deseas enviar el documento #${folio}:`, defaultEmail);
+      if (!email) return;
+
+      try {
+        const res = await fetch("/api/documents/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ folio, email })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`✅ Documento #${folio} enviado con éxito a ${email}`);
+        } else {
+          alert(`⚠️ Error al enviar correo: ${data.error}`);
+        }
+      } catch (err) {
+        alert("Error de conexión: " + err.message);
+      }
+    };
+
+    // 6. MODALS
+    window.openProductModal = function() {
+      document.getElementById("productModal").style.display = "flex";
+    };
+    window.closeProductModal = function() {
+      document.getElementById("productModal").style.display = "none";
+    };
+
+    window.openClientModal = function() {
+      document.getElementById("clientModal").style.display = "flex";
+    };
+    window.closeClientModal = function() {
+      document.getElementById("clientModal").style.display = "none";
+    };
+
+    window.openSmtpModal = function() {
+      document.getElementById("smtpModal").style.display = "flex";
+    };
+    window.closeSmtpModal = function() {
+      document.getElementById("smtpModal").style.display = "none";
+    };
+
+    function updateCategoryDatalist() {
+      const categories = [...new Set(products.map(p => p.category))];
+      document.getElementById("categoriesList").innerHTML = categories.map(c => `<option value="${c}">`).join("");
+    }
+
+    // Modal Forms Submissions
+    document.getElementById("newProductForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById("newProdName").value.trim(),
+        category: document.getElementById("newProdCategory").value.trim(),
+        price: parseFloat(document.getElementById("newProdPrice").value),
+        stock: parseInt(document.getElementById("newProdStock").value),
+        emoji: document.getElementById("newProdEmoji").value.trim() || "📦"
+      };
+
+      try {
+        const res = await fetch("/api/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeProductModal();
+          e.target.reset();
+          await loadProducts();
+          alert(`✅ Producto "${payload.name}" agregado y sincronizado con Univer Base`);
+        } else {
+          alert("Error: " + (data.error || "No se pudo crear el producto"));
+        }
+      } catch (err) {
+        alert("Error de red: " + err.message);
+      }
+    });
+
+    document.getElementById("newClientForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById("newClientName").value.trim(),
+        doc_id: document.getElementById("newClientDoc").value.trim(),
+        phone: document.getElementById("newClientPhone").value.trim(),
+        email: document.getElementById("newClientEmail").value.trim(),
+        address: document.getElementById("newClientAddress").value.trim()
+      };
+
+      try {
+        const res = await fetch("/api/clients", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeClientModal();
+          e.target.reset();
+          await loadClients();
+          clientSelect.value = data.client.id;
+          onClientChange();
+          alert(`✅ Cliente "${payload.name}" registrado exitosamente`);
+        } else {
+          alert("Error: " + (data.error || "No se pudo crear el cliente"));
+        }
+      } catch (err) {
+        alert("Error de red: " + err.message);
+      }
+    });
+
+    // SMTP Config
+    async function loadSmtpConfig() {
+      try {
+        const res = await fetch("/api/smtp");
+        const data = await res.json();
+        if (data) {
+          document.getElementById("smtpHost").value = data.host || "";
+          document.getElementById("smtpPort").value = data.port || 587;
+          document.getElementById("smtpUser").value = data.user || "";
+          document.getElementById("smtpFromName").value = data.fromName || "";
+          document.getElementById("smtpSecure").value = String(data.secure);
+          if (data.hasPass) {
+            document.getElementById("smtpPass").placeholder = "•••••••••••• (Guardada)";
+          }
+        }
+      } catch (e) {
+        console.error("Error al cargar config SMTP:", e);
+      }
+    }
+
+    document.getElementById("smtpForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        host: document.getElementById("smtpHost").value.trim(),
+        port: parseInt(document.getElementById("smtpPort").value),
+        user: document.getElementById("smtpUser").value.trim(),
+        fromName: document.getElementById("smtpFromName").value.trim(),
+        secure: document.getElementById("smtpSecure").value === "true"
+      };
+      const pass = document.getElementById("smtpPass").value;
+      if (pass) payload.pass = pass;
+
+      try {
+        const res = await fetch("/api/smtp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeSmtpModal();
+          alert("✅ Configuración SMTP guardada exitosamente");
+        } else {
+          alert("Error: " + data.error);
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+
+    window.testSmtpConnection = async function() {
+      const payload = {
+        host: document.getElementById("smtpHost").value.trim(),
+        port: parseInt(document.getElementById("smtpPort").value),
+        user: document.getElementById("smtpUser").value.trim(),
+        pass: document.getElementById("smtpPass").value,
+        secure: document.getElementById("smtpSecure").value === "true"
+      };
+
+      try {
+        alert("Probando conexión con el servidor SMTP...");
+        const res = await fetch("/api/smtp/test", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("🎉 ¡Conexión SMTP exitosa!");
+        } else {
+          alert("⚠️ Falló la conexión SMTP: " + data.error);
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    };
+
+    // Start App
+    init();
+  </script>
+</body>
+</html>

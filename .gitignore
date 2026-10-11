@@ -12,3 +12,13 @@ coverage/
 .claude/
 skills-lock.json
 .gstack/
+apps/sales-pos/data/
+apps/sales-pos/invoices/*.pdf
+apps/sales-pos/.env
+**/.env
+**/.env.*
+!**/.env.example
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db

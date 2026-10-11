@@ -1,6 +1,6 @@
 <div align="center">
 
-# Univer Workspace
+# OfficeAI Business
 
 **An open-source Office workspace where people and AI agents create, collaborate, and review together.**
 
@@ -13,6 +13,38 @@
 English | [简体中文](README.zh-CN.md)
 
 </div>
+
+## OfficeAI Business variant
+
+This public variant adds a local-first point-of-sale workflow to Univer
+Workspace: products, inventory, customers, commercial quotes, invoices, PDF
+generation, SMTP delivery and synchronization with Univer Base and Sheets.
+
+The complete installation and deployment guide is available in
+[OFFICEAI-SETUP.md](OFFICEAI-SETUP.md). The POS runs locally at
+`http://127.0.0.1:4050`; the Workspace Browser runs at
+`http://127.0.0.1:5173` and the Workspace Server at
+`http://127.0.0.1:3020`.
+
+> This repository is intended for local use and demonstrations. Do not expose
+> the POS directly to the public Internet without authentication, rate limits,
+> strict input validation and deployment hardening.
+
+### Quick start
+
+```powershell
+pnpm install
+Copy-Item apps/workspace/.env.example apps/workspace/.env
+pnpm workspace:dev:server
+# In a second terminal:
+pnpm workspace:dev:web
+# Optional POS terminal:
+cd apps/sales-pos
+node src/server.js
+```
+
+Do not commit `.env`, SQLite databases, generated invoice PDFs, customer data or
+SMTP/OAuth credentials. Those local artifacts are excluded by `.gitignore`.
 
 Univer Workspace is a deployable knowledge and collaboration workspace built on the
 [Univer Office SDK](https://github.com/dream-num/univer). It brings Sheets, Docs, Slides,
