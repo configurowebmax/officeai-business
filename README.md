@@ -46,6 +46,8 @@ node src/server.js
 Do not commit `.env`, SQLite databases, generated invoice PDFs, customer data or
 SMTP/OAuth credentials. Those local artifacts are excluded by `.gitignore`.
 
+![OfficeAI Business: Univer Workspace, AI assistant and Sales-POS](docs/images/officeai-business-cover.jpeg)
+
 Univer Workspace is a deployable knowledge and collaboration workspace built on the
 [Univer Office SDK](https://github.com/dream-num/univer). It brings Sheets, Docs, Slides,
 relational tables, canvases, and more into one shared runtime, with data and
